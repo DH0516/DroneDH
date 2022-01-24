@@ -11,12 +11,15 @@ public class Drone {
     private Drone_State currentState;
     private int Drone_Distance;
     private int Drone_Height;
+    private String currentPhotoFileName;
+    private String currentPhotoFormat;
+    private Photo savedPhoto;
+
 
     public Drone() { //Constructor
         currentState = Drone_State.Sitting;
         Drone_Distance = 0;
         Drone_Height = 0;
-
     }
 
 
@@ -40,7 +43,7 @@ public class Drone {
     }
 
     public void printDrone_Position(){////Debugging Purpose
-        System.out.println("Pos: " + this.Drone_Distance + ":" + this.Drone_Height);
+        System.out.println("Pos (D:H) : " + this.Drone_Distance + ":" + this.Drone_Height);
     }
 
     public void setDrone_Height(int pHeight){
@@ -50,6 +53,28 @@ public class Drone {
     public void setDrone_Distance(int pDistance){
         this.Drone_Distance = pDistance;
     }////Debugging Purpose
+
+
+    public String getPhotoFileName(){
+        return this.currentPhotoFileName;
+    }
+
+    public void setPhotoFileName(String fileName){
+        this.currentPhotoFileName = fileName;
+    }
+
+    public String getPhotoFormat(){
+        return this.currentPhotoFormat;
+    }
+
+    public void setPhotoFormat(String Format){
+        this.currentPhotoFormat = Format;
+    }
+
+    public Photo getSavedPhoto(){
+        return this.savedPhoto;
+    }
+
 
 
     //standBy, moveForward, moveBack, moveUp, moveDown, Land, takeOff, focusObject, capturePic
@@ -113,11 +138,9 @@ public class Drone {
                     runMove(pMove); //trying again. Intentionally recursive
                 }
             } else if (this.currentState == Drone_State.Focused) {
-                System.out.println("Photo Capture Command");
                 if (Objects.equals(pMove.getCurrentMove(), "capturePic")) {
                     // capture pic goes here
-                    Photo capture = new Photo();
-                    capture.capture();
+                    capturePic();
                     System.out.println("Capture successful");
                 } else {
                     setCurrentState(Drone_State.Moving);
@@ -133,7 +156,19 @@ public class Drone {
         }
     }
 
-    //private void
+    private void capturePic(){
+        if (getPhotoFileName() != null) {
+            Photo capture = new Photo();
+            System.out.println("Current name: " + getPhotoFileName() + " " + getPhotoFormat());
+            capture.setFileName(getPhotoFileName());
+            capture.setFormat(getPhotoFormat());
+            capture.saveFile();
+            this.savedPhoto = capture;
+        }
+        else{
+            System.out.println("Need to set the file name!");
+        }
+    }
 
 
 }

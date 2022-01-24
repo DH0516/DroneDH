@@ -1,10 +1,11 @@
 import java.util.LinkedList;
-import java.util.Scanner; //used for debugging purposes only
+//import java.util.Scanner; //used for debugging purposes only
 
 public class Control {
     private LinkedList<Moves> MovesList = new LinkedList<>(); //Moves == standBy
-    private Drone currentDrone; //Drone == Sitting
-    private LinkedList<Photo> PhotosList = new LinkedList<>(); //Photo == "untitled.raw"
+    private Drone currentDrone = new Drone();; //Drone == Sitting
+    private Photo savedPhoto = new Photo();
+    //Photo list string deep-copied from Drone.java
 
 
     public Control(){
@@ -15,11 +16,12 @@ public class Control {
 
     public String setPhotoName(String name){ //Setter
         try {
-            System.out.println("fileName: " + name);
+            System.out.println("File Name: " + name);
+            this.currentDrone.setPhotoFileName(name);
             return name;
         }
         catch (Exception e){
-            System.out.println("Invalid fileName input: Control.java");
+            System.out.println("Invalid file Name input. Will ignore: Control.java");
             return ("untitled");
         }
     }
@@ -27,14 +29,16 @@ public class Control {
     public String setPhotoFormat(String format){ //Setter
         try {
             System.out.println("File Format: " + format);
+            this.currentDrone.setPhotoFormat(format);
             return format;
         }
         catch (Exception e){
-            System.out.println("Invalid file format input: Control.java");
+            System.out.println("Invalid file format input. Will ignore: Control.java");
             return ("raw");
         }
     }
 
+    /*
     public String setPhotoName(){ //if no Photo Name preset - Debugging
         try {
             Scanner name = new Scanner(System.in);
@@ -59,7 +63,12 @@ public class Control {
         }
     }
 
+     */
 
+    public void getSavedPhotoFromDrone(){
+        savedPhoto = currentDrone.getSavedPhoto();
+        System.out.println("Drone saved this photo: " + savedPhoto.getSavedPic());
+    }
 
 
     public int add (String moveName){
@@ -72,7 +81,7 @@ public class Control {
             return 1;
         }
         catch (Exception e){
-            System.out.println("Invalid Input. Will not add: " + moveName);
+            System.out.println("Invalid Move input. Will not add: " + moveName);
             return 0;
         }
     }
@@ -93,13 +102,12 @@ public class Control {
     public int runAll(){
         System.out.println("Starting Run!");
         try{
-            Drone Drone = new Drone();
             for (Moves pMove : MovesList) {
-                Drone.runMove(pMove);
+                currentDrone.runMove(pMove);
             }
-            for (Photo pPhoto : PhotosList) {
-                System.out.println("Photos List: " + pPhoto.getSavedPic());
-            }
+            System.out.println("Done performing all moves");
+            getSavedPhotoFromDrone();
+            System.out.println("Done loading photo");
             return 1;
         }
         catch (Exception e){
@@ -108,3 +116,9 @@ public class Control {
     }
 
 }
+
+
+/*
+
+Control.runAll speaks only to Drone
+ */
