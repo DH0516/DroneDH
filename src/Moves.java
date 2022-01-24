@@ -1,6 +1,6 @@
 public class Moves {
 
-    public enum typesOfMove {
+    private enum typesOfMove {
         standBy, moveForward, moveBackward, moveUp, moveDown, Landing, takeOff,
         focusObject, capturePic
     }
@@ -11,12 +11,12 @@ public class Moves {
         currentMove = typesOfMove.standBy;
     }
 
-    public void setCurrentMove(typesOfMove pMove) {
-        this.currentMove = pMove;
+    public void setCurrentMove(String pMove) {
+        this.currentMove = typesOfMove.valueOf(pMove);
     }
 
-    public typesOfMove getCurrentMove() {
-        return this.currentMove;
+    public String getCurrentMove() {
+        return this.currentMove.name();
     }
 
 }

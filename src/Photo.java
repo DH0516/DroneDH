@@ -6,18 +6,23 @@ public class Photo {
 
     private String fileName;
     private saveFormats Format;
+    private String savedPic;
 
-    public Photo() {
-        fileName = "untitled";
-        Format = saveFormats.raw;
-        //RAW is default
+    public Photo() {    }
+
+    public String getSavedPic(){
+        return this.savedPic;
     }
 
     private String formatAsString(saveFormats pForm){
         return pForm.name();
     }
 
-    private int renameFile(String newName){//1 success 0 fail
+    private String getFileName(){
+        return this.fileName;
+    }
+
+    private int setFileName(String newName){//1 success 0 fail
         try {
             this.fileName = newName;
             return 1;
@@ -26,6 +31,10 @@ public class Photo {
             System.out.println("Invalid input for fileName: Photo.java");
             return 0;
         }
+    }
+
+    private String getFormatName(){
+        return this.Format.name();
     }
 
     private int setFormat(String formatName){ //1 success 0 fail
@@ -57,15 +66,15 @@ public class Photo {
     }
 
     private String makeFile(){
-        String result = this.fileName + formatAsString(this.Format);
+        String result = this.fileName + "." + formatAsString(this.Format);
         System.out.println(result);
         return result;
     }
 
-    public String capture(String newName, String formatName) {
-        System.out.println("Capturing photo...");
+    public void capture(String newName, String formatName) {
+        System.out.println("Capturing start...");
 
-        int nameTester = renameFile(newName);
+        int nameTester = setFileName(newName);
         if (nameTester == 0) {
             this.fileName = "untitled";
             System.out.println("Invalid name. fileName default 'untitled': Photo.java");
@@ -75,18 +84,20 @@ public class Photo {
         int formatTester = setFormat(formatName);
         if (formatTester == 0) {
             this.Format = saveFormats.raw;
-            System.out.println("Invalid name. Format default 'RAW': Photo.java");
         }
-        System.out.println("Setting format to " + formatName);
+        System.out.println("Setting format to " + this.Format);
         String result = this.makeFile();
         System.out.println("Captured: " + result);
-        return result;
+        this.savedPic = result;
         //result goes to Control.java
     }
 
     public void capture(){
-        Control control = new Control();
-        capture(control.setPhotoName(), control.setPhotoFormat());
+        if (getFileName() == null || getFormatName() == null) {
+            Control control = new Control();
+            capture(control.setPhotoName(), control.setPhotoFormat());
+        }
+        capture(getFileName(), getFormatName());
     }
 
 }

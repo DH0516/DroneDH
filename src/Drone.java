@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Drone {
 
     private enum Drone_State {
@@ -29,63 +31,60 @@ public class Drone {
     }
 
 
-    public int getDrone_Distance(){
+    public int getDrone_Distance(){ ////Debugging Purpose
         return this.Drone_Distance;
     }
 
-    public int getDrone_Height(){
+    public int getDrone_Height(){////Debugging Purpose
         return this.Drone_Height;
     }
 
-    public void printDrone_Position(){
-        System.out.println(this.Drone_Distance);
-        System.out.println(this.Drone_Height);
+    public void printDrone_Position(){////Debugging Purpose
+        System.out.println("Pos: " + this.Drone_Distance + ":" + this.Drone_Height);
     }
 
     public void setDrone_Height(int pHeight){
         this.Drone_Height = pHeight;
-    }
+    }////Debugging Purpose
 
     public void setDrone_Distance(int pDistance){
         this.Drone_Distance = pDistance;
-    }
+    }////Debugging Purpose
 
 
     //standBy, moveForward, moveBack, moveUp, moveDown, Land, takeOff, focusObject, capturePic
     public void runMove (Moves pMove) {
         try {
-            System.out.println("Current State is: " + getCurrentState());
+            //System.out.println("Current State is: " + getCurrentState());
             if (this.currentState == Drone_State.Moving) {
                 switch (pMove.getCurrentMove()) {
-                    case standBy -> {
-                        System.out.println("runMove - standBy");
-                        //do nothing
-                    }
-                    case moveForward -> {
+                    case "standBy" -> //do nothing
+                            System.out.println("runMove - standBy");
+                    case "moveForward" -> {
                         System.out.println("runMove - moveForward");
                         this.Drone_Distance++;
                     }
-                    case moveBackward -> {
+                    case "moveBackward" -> {
                         System.out.println("runMove - moveBackward");
                         this.Drone_Distance--;
                     }
-                    case moveUp -> {
+                    case "moveUp" -> {
                         System.out.println("runMove - moveUp");
                         this.Drone_Height++;
                     }
-                    case moveDown -> {
+                    case "moveDown" -> {
                         System.out.println("runMove - moveDown");
                         this.Drone_Height--;
                     }
-                    case Landing -> {
+                    case "Landing" -> {
                         System.out.println("runMove - Landing. Drone_State is now Sitting");
                         this.Drone_Height = 0;
                         //notice how distance does not change from 'Land'
-                        this.currentState = Drone_State.Sitting;
+                        setCurrentState(Drone_State.Sitting);
                     }
-                    case focusObject -> {
-                        System.out.println("runMove - Focus on Object. Ready to take a photo now");
-                        this.currentState = Drone_State.Focused;
+                    case "focusObject" -> {
+                        setCurrentState(Drone_State.Focused);
+                        System.out.println("runMove - Focus on Object. Drone_State: Focused");
                     }
                     default -> {
                         try {
@@ -97,29 +96,33 @@ public class Drone {
                         System.out.println("Drone_State == Moving. Try a different Move");
                     }
                 }
-                System.out.println("Drone currently at this position:");
                 printDrone_Position(); //Optional
             } else if (this.currentState == Drone_State.Sitting) {
-                if (pMove.getCurrentMove() == Moves.typesOfMove.takeOff) {
+                if (Objects.equals(pMove.getCurrentMove(), "takeOff")) {
                     System.out.println("First move is takeOff. Great!");
-                    System.out.println("Taking off...");
-                    this.Drone_Height = 1;
+                    setDrone_Height(1);
                     setCurrentState(Drone_State.Moving);
+                    System.out.println("Taking off... Drone is now Moving");
+                    printDrone_Position();
                 } else {
-                    System.out.println("Drone_State == Sitting. Will take off first");System.out.println("Taking off...");
-                    this.Drone_Height = 1;
+                    System.out.println("Drone_State == Sitting. Will take off first");
+                    setDrone_Height(1);
                     setCurrentState(Drone_State.Moving);
+                    System.out.println("Taking off... Drone is now Moving");
+                    printDrone_Position();
                     runMove(pMove); //trying again. Intentionally recursive
                 }
             } else if (this.currentState == Drone_State.Focused) {
-                if (pMove.getCurrentMove() == Moves.typesOfMove.capturePic) {
+                System.out.println("Photo Capture Command");
+                if (Objects.equals(pMove.getCurrentMove(), "capturePic")) {
                     // capture pic goes here
                     Photo capture = new Photo();
                     capture.capture();
-                    System.out.println("Capture successful: Drone.java");
+                    System.out.println("Capture successful");
                 } else {
-                    this.currentState = Drone_State.Moving;
+                    setCurrentState(Drone_State.Moving);
                     System.out.println("Drone_State is not Focused anymore");
+                    runMove(pMove);
                 }
             } else {
                 System.out.println("Drone_State is invalid: Drone.java");
@@ -129,6 +132,9 @@ public class Drone {
             System.out.println("Invalid Move: Drone.java");
         }
     }
+
+    //private void
+
 
 }
 

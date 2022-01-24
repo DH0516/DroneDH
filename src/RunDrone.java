@@ -5,23 +5,27 @@ public class RunDrone {
     public static void main(String[] args) {
 
         Control remote = new Control();
-        int test = remote.add(Moves.typesOfMove.moveForward);
-        System.out.println(test);
-        /*
+        int test = remote.add("moveForward");
         //will cause auto add of take off
-        Control.add(move down)
-        Control.add(move back)
-        Control.add(move forward)
-        Control.add(move forward)
-        Control.remove() //remove the previous
-        Control.setPhotoName("test1");
-        Control.add(capturePic);
-        Control.add(focusOnObject);
-        Control.add(capturePic);
-        Control.add(capturePic);
-        Control.add(move forward)
-        Control.add(Landing);
-        Control.runAll;
-        */
+        int test2 = remote.add("this doesn't work");
+        System.out.println(test2);
+        remote.add("moveBackward");
+        remote.add("moveUp");
+        remote.add("moveDown");
+        remote.add("moveDown");
+        remote.add("moveDown");
+        remote.add("moveDown");
+        remote.remove(); //remove the previous
+        remote.setPhotoName("test1");
+        remote.add("capturePic"); //Drone_State == Moving. Try a different Move
+        remote.add("focusObject");
+        remote.setPhotoName("test2");
+        remote.setPhotoFormat("PNG");
+        remote.add("capturePic");
+        remote.add("moveForward");
+        remote.add("Landing");
+        System.out.println("----------------------------");
+        remote.runAll();
+
     }
 }
