@@ -14,19 +14,19 @@ public class Drone {
         currentState = Drone_State.Sitting;
         Drone_Distance = 0;
         Drone_Height = 0;
+
     }
 
 
 
-    public void setCurrentState(Drone_State pState) {
+    private void setCurrentState(Drone_State pState) {
         currentState = pState;
     }
+    //cannot change current state of Drone
 
     public Drone_State getCurrentState() {
         return this.currentState;
     }
-
-    public boolean photoReady() { return this.currentState == Drone_State.Focused; }
 
 
     public int getDrone_Distance(){
@@ -51,13 +51,16 @@ public class Drone {
     }
 
 
-
     //standBy, moveForward, moveBack, moveUp, moveDown, Land, takeOff, focusObject, capturePic
     public void runMove (Moves pMove) {
         try {
             System.out.println("Current State is: " + getCurrentState());
             if (this.currentState == Drone_State.Moving) {
                 switch (pMove.getCurrentMove()) {
+                    case standBy -> {
+                        System.out.println("runMove - standBy");
+                        //do nothing
+                    }
                     case moveForward -> {
                         System.out.println("runMove - moveForward");
                         this.Drone_Distance++;
@@ -89,7 +92,7 @@ public class Drone {
                             System.out.println(pMove.getCurrentMove());
                         }
                         catch (Exception e){
-                            System.out.println("Invalid Move input");
+                            System.out.println("Invalid Move input: Drone.java");
                         }
                         System.out.println("Drone_State == Moving. Try a different Move");
                     }
@@ -98,26 +101,32 @@ public class Drone {
                 printDrone_Position(); //Optional
             } else if (this.currentState == Drone_State.Sitting) {
                 if (pMove.getCurrentMove() == Moves.typesOfMove.takeOff) {
+                    System.out.println("First move is takeOff. Great!");
+                    System.out.println("Taking off...");
+                    this.Drone_Height = 1;
                     setCurrentState(Drone_State.Moving);
                 } else {
-                    System.out.println("Drone_State == Sitting. First need to takeOff");
+                    System.out.println("Drone_State == Sitting. Will take off first");System.out.println("Taking off...");
+                    this.Drone_Height = 1;
+                    setCurrentState(Drone_State.Moving);
+                    runMove(pMove); //trying again. Intentionally recursive
                 }
             } else if (this.currentState == Drone_State.Focused) {
                 if (pMove.getCurrentMove() == Moves.typesOfMove.capturePic) {
                     // capture pic goes here
                     Photo capture = new Photo();
                     capture.capture();
+                    System.out.println("Capture successful: Drone.java");
                 } else {
                     this.currentState = Drone_State.Moving;
                     System.out.println("Drone_State is not Focused anymore");
                 }
             } else {
-                System.out.println("Drone_State is invalid");
+                System.out.println("Drone_State is invalid: Drone.java");
             }
-
         }
         catch (Exception e){
-            System.out.println("Invalid Move");
+            System.out.println("Invalid Move: Drone.java");
         }
     }
 

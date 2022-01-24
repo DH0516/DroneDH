@@ -11,7 +11,7 @@ public class Moves {
         currentMove = typesOfMove.standBy;
     }
 
-    public void setMove(typesOfMove pMove) {
+    public void setCurrentMove(typesOfMove pMove) {
         this.currentMove = pMove;
     }
 
