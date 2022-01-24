@@ -94,7 +94,6 @@ public class Control {
             System.out.println("Done performing all moves.");
             System.out.println();
             getSavedPhotoFromDrone();
-            System.out.println("Done loading photo.");
             System.out.println();
             System.out.println("Print moves that ran:");
             printMovesList();
