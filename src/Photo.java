@@ -8,7 +8,10 @@ public class Photo {
     private saveFormats Format;
     private String savedPic;
 
-    public Photo() {    }
+    public Photo(){
+        Format = saveFormats.raw;
+    }
+
 
     public String getFileName(){
         return this.fileName;
@@ -25,7 +28,7 @@ public class Photo {
         try {
             this.fileName = newName;
         }
-        catch (Exception e){
+        catch (Exception e){ //it should not really get here
             System.out.println("Invalid input for fileName: Photo.java");
             this.fileName = "untitled";
         }
@@ -36,22 +39,15 @@ public class Photo {
         try {
             String input = formatName.toLowerCase();
             switch (input) {
-                case "jpg":
-                    this.Format = saveFormats.jpg;
-                    break;
-                case "png":
-                    this.Format = saveFormats.png;
-                    break;
-                case "raw":
-                    this.Format = saveFormats.raw;
-                    break;
-                case "pdf":
-                    this.Format = saveFormats.pdf;
-                    break;
-                default:
+                case "jpg" -> this.Format = saveFormats.jpg;
+                case "png" -> this.Format = saveFormats.png;
+                case "raw" -> this.Format = saveFormats.raw;
+                case "pdf" -> this.Format = saveFormats.pdf;
+                default -> {
                     System.out.println("Format has to be one of : JPG, PNG, RAW, PDF. Default RAW: Photo.java");
                     this.Format = saveFormats.raw;
                 }
+            }
         }
         catch (Exception e){
             System.out.println("Format has to be one of : JPG, PNG, RAW, PDF. Default RAW: Photo.java");
@@ -59,10 +55,8 @@ public class Photo {
         }
     }
 
-    public String saveFile(){
-        String result = getFileName() + "." + getFormatName();
-        this.savedPic = result;
-        return result;
+    public void saveFile(){
+        this.savedPic = getFileName() + "." + getFormatName();
     }
 
 
