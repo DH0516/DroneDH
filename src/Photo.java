@@ -4,25 +4,23 @@ public class Photo {
         jpg, png, raw, pdf
     }
 
+    //Fields
     private String fileName;
     private saveFormats Format;
     private String savedPic;
 
     public Photo(){
         Format = saveFormats.raw;
-    }
+    } //constructor defaults to RAW
 
-
+    //Methods
     public String getFileName(){
         return this.fileName;
     }
     public saveFormats getFormatName(){ return this.Format;}
-
     public String getSavedPic(){
         return this.savedPic;
     }
-
-
 
     public void setFileName(String newName){
         try {
@@ -33,7 +31,6 @@ public class Photo {
             this.fileName = "untitled";
         }
     }
-
 
     public void setFormat(String formatName){
         try {
@@ -55,10 +52,9 @@ public class Photo {
         }
     }
 
-    public void saveFile(){
+    public void saveFile(){ //create photo
         this.savedPic = getFileName() + "." + getFormatName();
     }
-
 
 }
 

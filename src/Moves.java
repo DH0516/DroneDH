@@ -5,15 +5,14 @@ public class Moves {
         toggleFocus, capturePic
     }
 
-    private typesOfMove currentMove = typesOfMove.standBy; //default
+    //Fields
+    private typesOfMove currentMove = typesOfMove.standBy; //default is standBy
 
+    //Methods
     public void setCurrentMove(String pMove) {
         this.currentMove = typesOfMove.valueOf(pMove);
     }
-
-    public String getCurrentMove() {
-        return this.currentMove.name();
-    }
+    public String getCurrentMove() { return this.currentMove.name(); }
 
 }
 

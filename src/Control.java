@@ -1,12 +1,14 @@
 import java.util.LinkedList;
 
 public class Control {
+    //Fields
     private final LinkedList<Moves> MovesList = new LinkedList<>(); //Moves == standBy
     private final Drone currentDrone = new Drone(); //Drone == Sitting
 
-
+    //Methods
     public void printMovesList() {
         for (Moves pMove : MovesList){
+            System.out.print(MovesList.indexOf(pMove) + " ");
             System.out.println(pMove.getCurrentMove());
         }
     }
@@ -31,8 +33,7 @@ public class Control {
         }
     }
 
-
-    public void getSavedPhotoFromDrone(){
+    public void getSavedPhotoFromDrone(){ //getter - Accesses Drone
         try {
             String result = this.currentDrone.getSavedPhoto().getSavedPic();
             System.out.println("Drone saved this photo: " + result);
@@ -41,7 +42,6 @@ public class Control {
             System.out.println("Drone did not save any photo");
         }
     }
-
 
     public void add (String moveName){
         try {
@@ -65,7 +65,7 @@ public class Control {
             System.out.println(pMove.getCurrentMove());
         }
         catch (Exception e){
-            System.out.println("Error: Could not add " + moveName);
+            System.out.println("Error: Could not add " + moveName + " at position: " + orderPosition);
         }
     }
 
@@ -77,7 +77,7 @@ public class Control {
             System.out.println(result);
         }
         catch (Exception e){
-            System.out.println("Error: Could not remove");
+            System.out.println("Error: Could not remove last item");
         }
     }
 
@@ -89,15 +89,15 @@ public class Control {
             System.out.println(result);
         }
         catch (Exception e){
-            System.out.println("Error: Could not remove");
+            System.out.println("Error: Could not remove the item at position: " + orderPosition);
         }
     }
 
-    public void runAll(){
+    public void runAll(){ //Accesses Drone
         System.out.println("Starting runAll!");
         try{
             if (!MovesList.getFirst().getCurrentMove().equals("takeOff")){
-                System.out.println("Must takeOff first - Adding takeOff");
+                System.out.println("Auto-Add: Must takeOff first - Adding takeOff...");
                 add(0,"takeOff");
             }
             System.out.println();
@@ -105,25 +105,25 @@ public class Control {
                 currentDrone.runMove(pMove);
             }
             if (currentDrone.getDrone_Height() != 0){
-                System.out.println("Must Land at the end - Adding Landing");
+                System.out.println("Auto-Add: Must Land at the end - Adding Landing...");
                 add("Landing");
                 currentDrone.runMove(MovesList.getLast());
             }
-            System.out.println("Done performing all moves.");
+            System.out.println("---Done performing all moves.---");
             System.out.println();
             getSavedPhotoFromDrone();
             System.out.println();
-            System.out.println("Print moves that ran:");
+            System.out.println("Recorded moves from the LinkedList of Control:");
             printMovesList();
         }
         catch (Exception e){
-            System.out.println("Drone not connected!");
+            System.out.println("Error at Control - runAll! Drone connection lost.");
         }
     }
 
 }
 
-/*
+/* Extra code for future & debugging
     public String setPhotoName(){ //if no Photo Name preset - Debugging
         try {
             Scanner name = new Scanner(System.in);
@@ -147,5 +147,4 @@ public class Control {
             return ("raw");
         }
     }
-
      */

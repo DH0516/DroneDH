@@ -1,10 +1,17 @@
 public class RunDrone {
+    /*
+    1. Create a new Control
+    2. Make a programmed move sequence (add, remove)
+    standBy, moveForward, moveBackwards, moveUp, moveDown, Landing, takeOff, toggleFocus, capturePic
+    3. Set Photo name and Photo format (setPhotoName, setPhotoFormat)
+    4. 'runAll' to run the sequence
+     */
 
     public static void main(String[] args) {
 
         Control remote = new Control();
         //will cause auto add of take off
-        remote.remove(); //remove the previous
+        remote.remove(); //cannot remove from an empty list
         remote.add("this doesn't work");
         remote.add("capturePic");
         remote.setPhotoName("test1");
@@ -16,7 +23,7 @@ public class RunDrone {
         remote.add("capturePic"); //Drone_State == Moving. Try a different Move
         remote.add("toggleFocus");
         remote.add("capturePic");
-        remote.add("moveForward");
+        remote.add("moveForward"); //add automatic landing after
         System.out.println("----------------------------");
         remote.runAll();
         System.out.println();
@@ -24,8 +31,10 @@ public class RunDrone {
         System.out.println("TEST2");
         Control remote2 = new Control();
         remote2.add("takeOff");
+        remote2.add("takeOff");
         remote2.setPhotoName("test2");
         remote2.setPhotoFormat("fdas");
+        remote2.remove(); //successful removal - takeOff
         remote2.add("Landing");
         remote2.add("moveForward");
         remote2.add("takeOff");
@@ -34,7 +43,7 @@ public class RunDrone {
         remote2.add("Landing");
         remote2.add("Landing");
         remote2.add("toggleFocus");
-        remote2.add("capturePic");
+        remote2.add("capturePic"); //test2.raw
         System.out.println("----------------------------");
         remote2.runAll();
         System.out.println();
