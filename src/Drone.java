@@ -22,23 +22,22 @@ public class Drone {
 
 
 
-    private void setCurrentState(Drone_State pState) {
-        currentState = pState;
+    public void setCurrentState(String pState) {
+        this.currentState = Drone_State.valueOf(pState);
     }
-    //cannot change current state of Drone
 
-    public Drone_State getCurrentState() {
-        return this.currentState;
+    public String getCurrentState() {
+        return this.currentState.name();
     }
 
 
     public int getDrone_Distance(){//Debug + Future implementation
         return this.Drone_Distance;
-    }
+    } //Future implementation
 
     public int getDrone_Height(){//Debug + Future implementation
         return this.Drone_Height;
-    }
+    } //Future implementation
 
     public void printDrone_Position(){//Debug Helper
         System.out.println("Pos (D:H) : " + this.Drone_Distance + ":" + this.Drone_Height + " - " + getCurrentState());
@@ -50,7 +49,7 @@ public class Drone {
 
     public void setDrone_Distance(int pDistance){//Debug + Future implementation
         this.Drone_Distance = pDistance;
-    }
+    } //Future implementation
 
 
     public String getPhotoFileName(){
@@ -82,49 +81,62 @@ public class Drone {
                 case "standBy" -> //do nothing
                     System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                 case "moveForward" -> {
-                    setCurrentState(Drone_State.Moving);
+                    this.setCurrentState("Moving");
                     this.Drone_Distance++;
                     System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                 }
                 case "moveBackward" -> {
-                    setCurrentState(Drone_State.Moving);
+                    this.setCurrentState("Moving");
                     this.Drone_Distance--;
                     System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                 }
                 case "moveUp" -> {
-                    setCurrentState(Drone_State.Moving);
+                    this.setCurrentState("Moving");
                     this.Drone_Height++;
                     System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                 }
                 case "moveDown" -> {
-                    setCurrentState(Drone_State.Moving);
+                    this.setCurrentState("Moving");
                     this.Drone_Height--;
                     System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                 }
                 case "Landing" -> {
-                    this.Drone_Height = 0;
-                    //notice how distance does not change from 'Land'
-                    setCurrentState(Drone_State.Sitting);
-                    System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
-                }
-                case "toggleFocus" -> {
-                    if (!getCurrentState().equals(Drone_State.Focused)) {
-                        setCurrentState(Drone_State.Focused);
-                        System.out.println("runMove: " + input + " ON. Drone_State: "  + getCurrentState());
+                    if (this.getDrone_Height() == 0) { //can't land when at 0 height
+                        //notice how distance does not change from 'Land'
+                        System.out.println("Landing: Drone has already landed - Do nothing");
+                        this.setCurrentState("Sitting");
+                        System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
                     }
                     else{
-                        setCurrentState(Drone_State.Moving);
+                        this.setDrone_Height(0);
+                        this.setCurrentState("Sitting");
+                        System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
+                    }
+                }
+                case "toggleFocus" -> {
+                    if (!getCurrentState().equals("Focused")) { //Moving --> Focused
+                        this.setCurrentState("Focused");
+                        System.out.println("runMove: " + input + " ON. Drone_State: "  + getCurrentState());
+                    }
+                    else if (getCurrentState().equals("Focused")) { //Focused --> Moving
+                        this.setCurrentState("Moving");
                         System.out.println("runMove: " + input + " OFF. Drone_State: "  + getCurrentState());
                     }
                 }
                 case "capturePic" -> {
                     System.out.print("runMove: " + input);
-                    capturePic();
+                    this.capturePic();
                 }
                 case "takeOff" -> {
-                    setDrone_Height(1);
-                    setCurrentState(Drone_State.Moving);
-                    System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
+                    if (this.getCurrentState().equals("Sitting")) { //only take off when Sitting
+                        this.setDrone_Height(1);
+                        this.setCurrentState("Moving");
+                        System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
+                    }
+                    else{
+                        System.out.println("takeOff: Drone is already in operation - Do nothing");
+                        System.out.println("runMove: " + input + " Drone_State: " + getCurrentState());
+                    }
                 }
                 default -> System.out.println("Invalid move input: Drone.java");
             }
@@ -137,7 +149,7 @@ public class Drone {
 
     private void capturePic(){ //Capture process. 1: success 0: fail
         System.out.println(" Drone_State: " + getCurrentState());
-        if (getCurrentState() != Drone_State.Focused){
+        if (!getCurrentState().equals("Focused")){
             System.out.println("Drone is not in focus. Please turn on toggleFocus - Photo not taken");
             return;
         }

@@ -33,8 +33,13 @@ public class Control {
 
 
     public void getSavedPhotoFromDrone(){
-        Photo savedPhoto = currentDrone.getSavedPhoto();
-        System.out.println("Drone saved this photo: " + savedPhoto.getSavedPic());
+        try {
+            String result = this.currentDrone.getSavedPhoto().getSavedPic();
+            System.out.println("Drone saved this photo: " + result);
+        }
+        catch (Exception e){
+            System.out.println("Drone did not save any photo");
+        }
     }
 
 
@@ -76,6 +81,18 @@ public class Control {
         }
     }
 
+    public void remove(int orderPosition){
+        try{
+            String result = MovesList.get(orderPosition).getCurrentMove();
+            MovesList.remove(orderPosition);
+            System.out.print("Removed: ");
+            System.out.println(result);
+        }
+        catch (Exception e){
+            System.out.println("Error: Could not remove");
+        }
+    }
+
     public void runAll(){
         System.out.println("Starting runAll!");
         try{
@@ -83,13 +100,14 @@ public class Control {
                 System.out.println("Must takeOff first - Adding takeOff");
                 add(0,"takeOff");
             }
-            if (!MovesList.getLast().getCurrentMove().equals("Landing")){
-                System.out.println("Must Land at the end - Adding Landing");
-                add("Landing");
-            }
             System.out.println();
             for (Moves pMove : MovesList) {
                 currentDrone.runMove(pMove);
+            }
+            if (currentDrone.getDrone_Height() != 0){
+                System.out.println("Must Land at the end - Adding Landing");
+                add("Landing");
+                currentDrone.runMove(MovesList.getLast());
             }
             System.out.println("Done performing all moves.");
             System.out.println();
